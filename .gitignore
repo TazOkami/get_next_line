@@ -1,1 +1,3 @@
 .vscode/
+ssh-keygen -t ed25519 -C "taz.okami@hotmail.com"
+ssh-keygen -t ed25519 -C "taz.okami@hotmail.com".pub
