@@ -1,18 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Jpaulis <Jpaulis@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/19 15:54:53 by Jpaulis           #+#    #+#             */
-/*   Updated: 2024/11/25 09:36:37 by Jpaulis          ###   ########.fr       */
+/*   Created: 2024/11/19 15:58:34 by Jpaulis           #+#    #+#             */
+/*   Updated: 2024/11/19 16:05:02 by Jpaulis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-/*extrait une ligne complète (jusqu'au prochain \n ou la fin de stash)*/
 static char	*ft_extract_line(char *stash)
 {
 	int		i;
@@ -37,7 +36,6 @@ static char	*ft_extract_line(char *stash)
 	return (line);
 }
 
-/*libère la mémoire allouée à un pointeur et met ce pointeur à NULL*/
 static char	*ft_free_null(char **stash)
 {
 	if (*stash)
@@ -48,7 +46,6 @@ static char	*ft_free_null(char **stash)
 	return (NULL);
 }
 
-/*sauvegarde le reste de stash après la ligne extraite*/
 static char	*ft_save_remainder(char *stash)
 {
 	int		i;
@@ -72,7 +69,6 @@ static char	*ft_save_remainder(char *stash)
 	return (remainder);
 }
 
-/*lit le fichier et stocke les données dans stash*/
 static char	*ft_read_file(int fd, char *stash)
 {
 	char	*buffer;
@@ -104,52 +100,24 @@ static char	*ft_read_file(int fd, char *stash)
 
 char	*get_next_line(int fd)
 {
-	static char	*stash;
+	static char	*stash[OPEN_MAX];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
-		return (ft_free_null(&stash));
-	if (!stash)
+	if (fd < 0 || fd >= OPEN_MAX || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+		return (ft_free_null(&stash[fd]));
+	if (!stash[fd])
 	{
-		stash = malloc(1);
-		if (!stash)
+		stash[fd] = malloc(1);
+		if (!stash[fd])
 			return (NULL);
-		stash[0] = '\0';
+		stash[fd][0] = '\0';
 	}
-	stash = ft_read_file(fd, stash);
-	if (!stash)
+	stash[fd] = ft_read_file(fd, stash[fd]);
+	if (!stash[fd])
 		return (NULL);
-	line = ft_extract_line(stash);
+	line = ft_extract_line(stash[fd]);
 	if (!line)
-		return (ft_free_null(&stash));
-	stash = ft_save_remainder(stash);
+		return (ft_free_null(&stash[fd]));
+	stash[fd] = ft_save_remainder(stash[fd]);
 	return (line);
 }
-
-/*
-#include <fcntl.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-
-#define BUFFER_SIZE 42
-#include "get_next_line.h"
-
-int	main()
-{
-	int		fd;
-	char	*line;
-
-	fd = open("test.txt", O_RDONLY);
-	while(1)
-	{
-		line = get_next_line(fd);
-		if (line == NULL)
-			break;
-		printf("%s", line);
-		free(line);
-	}
-	close(fd);
-	return (0);
-}
-*/

@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Jpaulis <Jpaulis@student.s19.be>          +#+  +:+       +#+        */
+/*   By: Jpaulis <Jpaulis@student.s19.be>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/23 10:03:47 by Jpaulis           #+#    #+#             */
-/*   Updated: 2024/11/19 10:24:35 by Jpaulis          ###   ########.fr       */
+/*   Created: 2024/11/19 15:58:19 by Jpaulis           #+#    #+#             */
+/*   Updated: 2024/11/19 16:02:29 by Jpaulis          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # include <unistd.h>
 # include <stdlib.h>
+# include <limits.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 1042
+# endif
+
+# ifndef OPEN_MAX
+#  define OPEN_MAX 1042
 # endif
 
 char	*get_next_line(int fd);
